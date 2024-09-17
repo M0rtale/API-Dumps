@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input[type="number"] {
+            width: 120px;
+        }
+        .button-group {
+            margin-top: 10px;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unit Converter</h1>
+    
+    <!-- Display curl usage instruction at the top -->
+    <p><strong>Usage:</strong></p>
+    <p>
+        <code>
+        curl -X POST http://unit.nikobelic29.cc/ -H "Content-Type: application/json" -d '{"from": "kilogram", "to": "pound", "value": 1}'
+        </code>
+    </p>
+    
+    <hr>
+
+    <!-- Length Conversion Form -->
+    <h2>Length Conversion</h2>
+    <div class="form-group">
+        <label for="length-from">Convert from:</label>
+        <select id="length-from"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="length-to">Convert to:</label>
+        <select id="length-to"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="length-value">Value:</label>
+        <input type="number" id="length-value" value="1">
+    </div>
+
+    <div class="button-group">
+        <button id="length-convert">Convert Length</button>
+    </div>
+
+    <!-- Weight Conversion Form -->
+    <h2>Weight Conversion</h2>
+    <div class="form-group">
+        <label for="weight-from">Convert from:</label>
+        <select id="weight-from"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="weight-to">Convert to:</label>
+        <select id="weight-to"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="weight-value">Value:</label>
+        <input type="number" id="weight-value" value="1">
+    </div>
+
+    <div class="button-group">
+        <button id="weight-convert">Convert Weight</button>
+    </div>
+
+    <!-- Result Section -->
+    <div id="result" class="result"></div>
+
+    <script>
+        // Fetch available options from /available-options
+        fetch('/available-options')
+            .then(response => response.json())
+            .then(data => {
+                // Populate length select boxes
+                const lengthFromSelect = document.getElementById('length-from');
+                const lengthToSelect = document.getElementById('length-to');
+                data.length.forEach(option => {
+                    const fromOption = document.createElement('option');
+                    fromOption.value = option;
+                    fromOption.textContent = option;
+                    lengthFromSelect.appendChild(fromOption);
+
+                    const toOption = document.createElement('option');
+                    toOption.value = option;
+                    toOption.textContent = option;
+                    lengthToSelect.appendChild(toOption);
+                });
+
+                // Populate weight select boxes
+                const weightFromSelect = document.getElementById('weight-from');
+                const weightToSelect = document.getElementById('weight-to');
+                data.weight.forEach(option => {
+                    const fromOption = document.createElement('option');
+                    fromOption.value = option;
+                    fromOption.textContent = option;
+                    weightFromSelect.appendChild(fromOption);
+
+                    const toOption = document.createElement('option');
+                    toOption.value = option;
+                    toOption.textContent = option;
+                    weightToSelect.appendChild(toOption);
+                });
+            });
+
+        // Handle length conversion
+        document.getElementById('length-convert').addEventListener('click', () => {
+            const fromUnit = document.getElementById('length-from').value;
+            const toUnit = document.getElementById('length-to').value;
+            const value = parseFloat(document.getElementById('length-value').value);
+
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    from: fromUnit,
+                    to: toUnit,
+                    value: value,
+                    type: 'length'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `Length Conversion Result: ${data.result}`;
+            });
+        });
+
+        // Handle weight conversion
+        document.getElementById('weight-convert').addEventListener('click', () => {
+            const fromUnit = document.getElementById('weight-from').value;
+            const toUnit = document.getElementById('weight-to').value;
+            const value = parseFloat(document.getElementById('weight-value').value);
+
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    from: fromUnit,
+                    to: toUnit,
+                    value: value,
+                    type: 'weight'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `Weight Conversion Result: ${data.result}`;
+            });
+        });
+    </script>
+</body>
+</html>
+
