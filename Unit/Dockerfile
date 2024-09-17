@@ -8,9 +8,8 @@ WORKDIR /home/app
 
 COPY . .
 
-RUN python3 -m pip install --no-cache-dir -r requirements.txt
-
-RUN chown -R root:app /home/app && \
+RUN python3 -m pip install --no-cache-dir -r requirements.txt && \ 
+    chown -R root:app /home/app && \
     chmod 750 /home/app && \
     chmod 550 /home/app/*
 
