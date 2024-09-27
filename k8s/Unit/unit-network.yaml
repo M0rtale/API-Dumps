@@ -33,5 +33,18 @@ spec:
                   number: 80
 
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: unit-service-lb
+  namespace: unit
+spec:
+  selector:
+    app: unit-service
+  ports:
+    - protocol: TCP
+      port: 80  # Expose on port 80 externally
+      targetPort: 9996  # The port where the Pods are listening
+  type: LoadBalancer
 
 
