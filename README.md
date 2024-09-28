@@ -13,6 +13,7 @@ All APIs will be deployed to *.nikobelic29.cc
 
 # List of future APIs
 
+* Simple Chatbot
 * Currency Conversion API
 * Math Expression Evaluator
 * Weather Data Processing API
